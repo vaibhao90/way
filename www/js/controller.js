@@ -25,7 +25,7 @@ angular.module('starter.controllers', ['ionic', 'firebase'])
         // Code will be here
         $scope.showAlert = function() {
             $ionicPopup.alert({
-                title: 'iMapApp',
+                title: 'WAY',
                 template: 'Your location has been saved!!'
             });
         };
