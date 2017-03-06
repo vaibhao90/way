@@ -26,7 +26,8 @@ angular.module('starter', ['ionic','starter.controllers'])
     $stateProvider
         .state('map', {
             url: '/map',
-            templateUrl: 'templates/map.html',
+            //templateUrl: 'templates/map.html',
+            templateUrl: 'www/templates/map.html',
             controller: 'MapCtrl'
         })
 
