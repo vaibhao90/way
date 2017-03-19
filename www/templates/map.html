@@ -5,6 +5,9 @@
                     <input type="text" ng-model="user.address" placeholder="Search..."  id="autocomplete" autocomplete-field>
                 </label>
             <div id="map" lat="-23.639492" lng="133.709107" zoom="8" autocomplete="user.address" map></div>
+
+                <div id="right-panel"></div>
+
             <div width="80%" class="list list-inset" style="margin-left:10%;margin-right:10%;">
                 <label class="item item-input">
                     <input type="text" ng-model="user.name" placeholder="Name">
@@ -15,6 +18,9 @@
                 </label>
                 
                 <button class="button button-full button-positive" ng-click="saveDetails()">Save</button>
+            </div>
+            <div ng-repeat="pos in positions">
+            {{pos}} 
             </div>
         </div>
     </ion-content>

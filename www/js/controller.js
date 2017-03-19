@@ -1,4 +1,7 @@
 var map;
+ var directionsDisplay = new google.maps.DirectionsRenderer;
+ var start;
+        var directionsService = new google.maps.DirectionsService;
 angular.module('starter.controllers', ['ionic', 'firebase'])
     .controller('MapCtrl', ['$scope', '$firebase', '$ionicPopup', function($scope, $firebase, $ionicPopup) {
 
@@ -8,6 +11,7 @@ angular.module('starter.controllers', ['ionic', 'firebase'])
 
         $scope.user = {};
 
+        console.log("Firebase0", fb);
         $scope.saveDetails = function() {
             var lat = $scope.user.latitude;
             var lgt = $scope.user.longitude;
@@ -28,16 +32,61 @@ angular.module('starter.controllers', ['ionic', 'firebase'])
             });
         };
 
+        $scope.positions  = fb.$asArray();
+        console.log("$scope.positions", $scope.positions);
 
-        // $scope.$watch("user.address", function(newVal, oldVal){
-        //     console.log("autocomplete", newVal, oldVal);
-        //     if(newVal){
-        //        var autocomplete = new google.maps.places.Autocomplete(newVal);
+     //    // to take an action after the data loads, use the $loaded() promise
+     // fb.$loaded().then(function() {
+     //   // To iterate the key/value pairs of the object, use angular.forEach()
+     //   angular.forEach(fb, function(value, key) {
+     //      console.log("key, value", key, value);
+     //   });
+     // });
 
-        //     }else{
 
-        //     }
-        // })
+        $scope.$watchCollection("positions", function(newVal, oldVal){
+            console.log("autocomplete", newVal, oldVal);
+            if(newVal && newVal.length){
+                for (var i = 0; i < newVal.length; i++) {
+                    console.log("newVal11", newVal[i]);
+                    var value =  newVal[i];
+                     var lat = value.latitude;
+                     var lgt = value.longitude;
+                      var myLatlng = new google.maps.LatLng(lat, lgt);
+                     var marker = new google.maps.Marker({
+                      position: myLatlng,
+                      map: map,
+                      title: 'Hello World!'
+                    });
+                     if(i!=0){
+                        var start =  new google.maps.LatLng(newVal[0].latitude, newVal[0].longitude);
+                         calculateAndDisplayRoute(directionsService, directionsDisplay, start, myLatlng);
+                    }
+                };
+                // newVal.forEach(newVal, function(value, key){
+                //     console.log("newVal", value, key);
+          
+                // })
+            }else{
+
+            }
+        })
+
+
+        function calculateAndDisplayRoute(directionsService, directionsDisplay, start, end) {
+      
+        directionsService.route({
+          origin: start,
+          destination: end,
+          travelMode: 'WALKING'
+        }, function(response, status) {
+          if (status === 'OK') {
+            directionsDisplay.setDirections(response);
+          } else {
+            window.alert('Directions request failed due to ' + status);
+          }
+        });
+      }
 
 
     }])
@@ -60,7 +109,11 @@ angular.module('starter.controllers', ['ionic', 'firebase'])
                     zoom: zValue,
                     center: myLatlng
                 };
+
                 map = new google.maps.Map(element[0], mapOptions);
+
+                 directionsDisplay.setMap(map);
+        directionsDisplay.setPanel(document.getElementById('right-panel'));
             var marker = new google.maps.Marker({
                     position: myLatlng,
                     map: map,
